@@ -156,6 +156,7 @@
 		48885D0A1A93D5D500A64125 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Aditya Bhat";
 				TargetAttributes = {
@@ -407,6 +408,7 @@
 				48885D331A93D5D500A64125 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		48885D341A93D5D500A64125 /* Build configuration list for PBXNativeTarget "CalculatorTests" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +417,7 @@
 				48885D361A93D5D500A64125 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
