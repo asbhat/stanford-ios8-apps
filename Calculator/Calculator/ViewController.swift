@@ -40,6 +40,7 @@ class ViewController: UIViewController {
         }
         history.text = history.text!.stringByReplacingOccurrencesOfString("= ", withString: "")
         history.text = history.text! + " " + operation + "\n="
+        // ** TODO ** fix history for multiple operations with no additons to the stack
         switch operation {
         // switch labels variables passed in as $n
             case "×": performOperation {$1 * $0}
@@ -62,7 +63,7 @@ class ViewController: UIViewController {
         }
     }
 
-    // Objective-C does not support method overloading (methods with the same name), but Swift does. Making this function private means the compiler will *not* try to make sure it works with Obj-C
+    // Objective-C does not support method overloading (methods with the same name), but Swift does. Making this function private means the compiler will _not_ try to make sure it works with Obj-C
     // http://stackoverflow.com/questions/29457720/compiler-error-method-with-objective-c-selector-conflicts-with-previous-declara
     private func performOperation(operation: Double -> Double) {
         if operandStack.count >= 1 {
