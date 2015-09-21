@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     // "implicitly unwrapped optional"
     // mostly useful when a variable is set very early and stays set
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var history: UILabel!
     
     // if a type can be inferred, let it (no need for ': Bool')
     var userIsInTheMiddleOfTypingANumber = false
@@ -23,7 +24,9 @@ class ViewController: UIViewController {
         let digit = sender.currentTitle!
         
         if userIsInTheMiddleOfTypingANumber {
-            display.text = display.text! + digit
+            if (digit == "." && display.text!.rangeOfString(".") == nil) || digit != "." {
+                display.text = display.text! + digit
+            }
         } else {
             display.text = digit
             userIsInTheMiddleOfTypingANumber = true
@@ -35,14 +38,19 @@ class ViewController: UIViewController {
         if userIsInTheMiddleOfTypingANumber {
             enter()
         }
+        history.text = history.text!.stringByReplacingOccurrencesOfString("= ", withString: "")
+        history.text = history.text! + " " + operation + "\n="
         switch operation {
         // switch labels variables passed in as $n
-        case "×": performOperation {$0 * $1}
-        case "÷": performOperation {$1 / $0}
-        case "+": performOperation {$0 + $1}
-        case "−": performOperation {$1 - $0}
-        case "√": performOperation {sqrt($0)}
-        default: break
+            case "×": performOperation {$1 * $0}
+            case "÷": performOperation {$1 / $0}
+            case "+": performOperation {$1 + $0}
+            case "−": performOperation {$1 - $0}
+            case "sin": performOperation {sin($0)}
+            case "cos": performOperation {cos($0)}
+            case "π": performOperation(M_PI)
+            case "√": performOperation {sqrt($0)}
+            default: break
         }
     }
     
@@ -53,17 +61,26 @@ class ViewController: UIViewController {
             enter()
         }
     }
-    func performOperation(operation: Double -> Double) {
+
+    // Objective-C does not support method overloading (methods with the same name), but Swift does. Making this function private means the compiler will *not* try to make sure it works with Obj-C
+    // http://stackoverflow.com/questions/29457720/compiler-error-method-with-objective-c-selector-conflicts-with-previous-declara
+    private func performOperation(operation: Double -> Double) {
         if operandStack.count >= 1 {
             displayValue = operation(operandStack.removeLast())
             enter()
         }
     }
     
+    private func performOperation(constant: Double) {
+        displayValue = constant
+        enter()
+    }
+    
     var operandStack = Array<Double>()
     
     @IBAction func enter() {
         userIsInTheMiddleOfTypingANumber = false
+        history.text = history.text! + " " + display.text!
         operandStack.append(displayValue)
     }
     
