@@ -33,6 +33,14 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func plusMinus() {
+        if userIsInTheMiddleOfTypingANumber {
+            displayValue! *= -1
+        } else {
+            performOperation {-1 * $0}
+        }
+    }
+
     @IBAction func operate(sender: UIButton) {
         let operation = sender.currentTitle!
         if userIsInTheMiddleOfTypingANumber {
@@ -49,7 +57,7 @@ class ViewController: UIViewController {
             case "−": performOperation {$1 - $0}
             case "sin": performOperation {sin($0)}
             case "cos": performOperation {cos($0)}
-            case "π": performOperation(M_PI)
+            case "π": performOperation (M_PI)
             case "√": performOperation {sqrt($0)}
             default: break
         }
@@ -82,17 +90,33 @@ class ViewController: UIViewController {
     @IBAction func enter() {
         userIsInTheMiddleOfTypingANumber = false
         history.text = history.text! + " " + display.text!
-        operandStack.append(displayValue)
+        operandStack.append(displayValue!)
     }
     
     // "computed property" = instance variables that are computed rather than stored
-    var displayValue: Double {
+    var displayValue: Double? {
         get {
-            return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+            return NSNumberFormatter().numberFromString(display.text!)?.doubleValue
         }
         set {
-            display.text = "\(newValue)"
+            display.text = (newValue != nil ? "\(newValue!)" : "0")
             userIsInTheMiddleOfTypingANumber = false
+        }
+    }
+    
+    @IBAction func clear() {
+        userIsInTheMiddleOfTypingANumber = false
+        display.text = "0"
+        history.text = ""
+        operandStack = []
+    }
+    
+    @IBAction func backspace() {
+        if display.text!.characters.count > 1 {
+            display.text = String(display.text!.characters.dropLast())
+        } else {
+            userIsInTheMiddleOfTypingANumber = false
+            display.text = "0"
         }
     }
 }
