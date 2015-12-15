@@ -19,6 +19,8 @@ class ViewController: UIViewController {
     // if a type can be inferred, let it (no need for ': Bool')
     var userIsInTheMiddleOfTypingANumber = false
     
+    var brain = CalculatorBrain()
+    
     @IBAction func appendDigit(sender: UIButton) {
         // the exclamation point (!) unwraps the Optional (will crash if is Nil)
         let digit = sender.currentTitle!
@@ -91,6 +93,9 @@ class ViewController: UIViewController {
         userIsInTheMiddleOfTypingANumber = false
         history.text = history.text! + " " + display.text!
         operandStack.append(displayValue!)
+        if let result = brain.pushOperand(displayValue!) {
+            displayValue = result
+        }
     }
     
     // "computed property" = instance variables that are computed rather than stored
