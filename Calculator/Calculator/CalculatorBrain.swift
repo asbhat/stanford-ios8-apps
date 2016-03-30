@@ -12,7 +12,7 @@ import Foundation
 // This is the 'Model' in MVC
 class CalculatorBrain {
     
-    
+    // not inheritance (enums can't inherit), but a protocol
     private enum Op : CustomStringConvertible {
         case Operand(Double)
         case UnaryOperation(String, Double -> Double)
@@ -33,8 +33,8 @@ class CalculatorBrain {
         }
     }
     
-    private var opStack = [Op]()
-    private var knownOps = [String: Op]()
+    private var opStack = [Op]()  // shorthand for an array of type Op
+    private var knownOps = [String: Op]()  // shorthand for a dictionary with String keys and Op values
     
     
     // Can't simplify divide and minus because operations are pulled off the stack backwards
@@ -50,8 +50,12 @@ class CalculatorBrain {
         learnOp(Op.UnaryOperation("√", sqrt))
         learnOp(Op.UnaryOperation("sin", sin))
         learnOp(Op.UnaryOperation("cos", cos))
+        learnOp(Op.UnaryOperation("±"){ -1 * $0 })
     }
     
+    
+    // Objective-C does not support method overloading (methods with the same name), but Swift does. Making this function private means the compiler will _not_ try to make sure it works with Obj-C
+    // http://stackoverflow.com/questions/29457720/compiler-error-method-with-objective-c-selector-conflicts-with-previous-declara
     // arrays are structs and are passed by value
     // all functions make parameters immutable by default, unless you put a 'var' before them in the function defintion
     private func evaluate(ops: [Op]) -> (result: Double?, remainingOps: [Op]) {
@@ -99,5 +103,9 @@ class CalculatorBrain {
             opStack.append(operation)
         }
         return evaluate()
+    }
+    
+    func clearOpStack() {
+        opStack = []
     }
 }
